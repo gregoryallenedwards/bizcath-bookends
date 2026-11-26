@@ -25,6 +25,13 @@ android/          including the native widget code
 - Each view model and repository has a test file.
 - No file is longer than 400 lines.
 
+## Storage
+
+Data is kept in a local database (drift). Repositories read it into memory at
+start and write to the database before updating what they hold.
+`lib/data/services/database.g.dart` is generated; it is exempt from the
+400-line rule and is not edited by hand. Android backup is switched off.
+
 ## Time
 
 All time-of-day logic reads the time from `ClockService`, so the debug menu can

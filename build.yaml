@@ -1,0 +1,7 @@
+# Copyright the BizCath contributors.
+targets:
+  $default:
+    builders:
+      source_gen:combining_builder:
+        options:
+          preamble: "// Copyright the BizCath contributors."

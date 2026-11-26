@@ -246,8 +246,10 @@ you are.
 
 ### N. About
 - App name, version, build type ("debug" / "official").
-- "Made by Allen. Free for life. No ads, no subscriptions. Open source."
-- Rows: Watch the channel (placeholder URL), More free apps (https://bizcath.com), Tip the maker
+- "Made by Gregory Allen Edwards. Free for life. No ads, no subscriptions. Open source." The name
+  links to https://gregoryallenedwards.com.
+- Rows: Watch the channel (https://www.youtube.com/@bizarrecathedral), More free apps
+  (https://bizarrecathedral.com), Tip the maker
   (disabled, "later"), Open-source licences (Flutter's licence page).
 - "Nothing leaves your phone." "Bookends is not a medical or crisis service."
 - Long-press the version number to open the debug menu.
@@ -367,3 +369,16 @@ on the phone, and a short report with screenshots of this app only.
 - `docs/` holds this spec, the design log and the screens PDF.
 - Each source file carries the line "Copyright the BizCath contributors."
 - No brand art in the repository.
+
+## 14. Answers to M1 questions (26 November 2026)
+1. Rotating placeholders (one chosen per day, no repeat on consecutive days):
+   - Today before the morning (Toast): "Ready when you are. Today's going to go well." / "Morning! Something good is on its way." / "Here we go. A fresh day." / "Good to see you. Let's start gently." / "Today has room for you."
+   - Morning question B (Toast): "Morning! How are you feeling?" / "How are you, this morning?" / "Before we start: how are you?" / "How's the start of your day?"
+   - Evening question H (Cocoa): "Evening. How are you feeling now?" / "There you are. How are you now?" / "The day's nearly done. How are you?" / "Come and sit. How are you feeling?"
+   - Goodnight J and Today at night (Cocoa): "Everything is exactly where it needs to be. Goodnight." / "The day is done, and that's enough. Goodnight." / "Nothing left to do tonight. Rest well." / "It all counts. Sleep well." / "You can put the day down now. Goodnight."
+2. Today in the evening state: Cocoa says "Cocoa's here. How are you now?" with the button "Talk to Cocoa". Your choice was right.
+3. Night: correct. Bottom tabs stay; the only action is Steady.
+4. Greeting by clock time: "Good morning" before 12:00, "Good afternoon" 12:00–16:59, "Good evening" from 17:00. The button stays "Start the day with Toast" until the evening time.
+5. Night summary: morning feeling → evening feeling, the goal and its outcome, the good thing, and Cocoa's note for Toast. That is enough.
+6. Follow the spec: feeling plus strength ("Last night you said: calm · a little"). The PDF wording was illustrative.
+7. Keep targetSdk at Flutter's default (36) for the prototype. We'll set it deliberately when preparing a store build.

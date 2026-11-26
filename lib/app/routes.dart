@@ -10,4 +10,6 @@ abstract final class Routes {
   static const morning = '/morning';
   static const evening = '/evening';
   static const steady = '/steady';
+  static const breath = '/breath';
+  static const firstRun = '/welcome';
 }

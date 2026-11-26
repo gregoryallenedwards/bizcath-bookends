@@ -1,27 +1,64 @@
 // Copyright the BizCath contributors.
 import 'package:flutter/material.dart';
 
-/// A line in a dashed-outline card, in italic.
-class LineCard extends StatelessWidget {
-  const LineCard({super.key, required this.line});
+import '../../domain/models/line.dart';
 
-  final String line;
+/// A line in a dashed-outline card, in italic, with Save and Share.
+class LineCard extends StatelessWidget {
+  const LineCard({
+    super.key,
+    required this.line,
+    required this.onToggleSave,
+    required this.onShare,
+  });
+
+  final Line line;
+  final VoidCallback onToggleSave;
+  final VoidCallback onShare;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return CustomPaint(
-      painter: _DashedBorderPainter(theme.colorScheme.outline),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Text(
-          line,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontStyle: FontStyle.italic,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        CustomPaint(
+          painter: _DashedBorderPainter(theme.colorScheme.outline),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+            child: Column(
+              children: [
+                Text(
+                  line.text,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  children: [
+                    TextButton.icon(
+                      onPressed: onToggleSave,
+                      icon: Icon(
+                        line.favourite ? Icons.favorite : Icons.favorite_border,
+                      ),
+                      label: Text(line.favourite ? 'Saved' : 'Save'),
+                    ),
+                    TextButton.icon(
+                      onPressed: onShare,
+                      icon: const Icon(Icons.share_outlined),
+                      label: const Text('Share'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+        const SizedBox(height: 4),
+        Text(line.attribution, style: theme.textTheme.bodySmall),
+      ],
     );
   }
 }

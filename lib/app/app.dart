@@ -3,32 +3,38 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../data/repositories/clock_repository.dart';
-import '../data/repositories/day_repository.dart';
-import '../data/services/clock_service.dart';
 import '../ui/debug/debug_view_model.dart';
 import '../ui/today/today_view_model.dart';
+import 'dependencies.dart';
 import 'router.dart';
 import 'theme.dart';
 
 class BookendsApp extends StatefulWidget {
-  const BookendsApp({super.key, this.clockService});
+  const BookendsApp({super.key, required this.dependencies});
 
-  /// Tests pass a fixed clock.
-  final ClockService? clockService;
+  /// Already loaded.
+  final Dependencies dependencies;
 
   @override
   State<BookendsApp> createState() => _BookendsAppState();
 }
 
 class _BookendsAppState extends State<BookendsApp> {
-  late final ClockRepository _clock = ClockRepository(
-    widget.clockService ?? ClockService(),
+  late final Dependencies _deps = widget.dependencies;
+  late final TodayViewModel _today = TodayViewModel(
+    clock: _deps.clock,
+    days: _deps.days,
+    lines: _deps.lines,
+    settings: _deps.settings,
   );
-  final DayRepository _days = DayRepository();
-  late final TodayViewModel _today = TodayViewModel(clock: _clock, days: _days);
-  late final DebugViewModel _debug = DebugViewModel(clock: _clock, days: _days);
+  late final DebugViewModel _debug = DebugViewModel(
+    clock: _deps.clock,
+    days: _deps.days,
+    settings: _deps.settings,
+    data: _deps.data,
+  );
   late final GoRouter _router = buildRouter(
+    dependencies: _deps,
     todayViewModel: _today,
     debugViewModel: _debug,
     debugMenuEnabled: kDebugMode,
@@ -39,8 +45,6 @@ class _BookendsAppState extends State<BookendsApp> {
     _router.dispose();
     _debug.dispose();
     _today.dispose();
-    _days.dispose();
-    _clock.dispose();
     super.dispose();
   }
 

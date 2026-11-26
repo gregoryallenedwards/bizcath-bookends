@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/routes.dart';
+import '../../domain/content/words.dart';
+import '../../domain/models/feeling.dart';
 import '../common/character.dart';
 import '../common/date_labels.dart';
 import '../common/info_card.dart';
@@ -23,14 +25,18 @@ Widget _title(BuildContext context, String text) => Semantics(
 
 /// Screen A.
 List<Widget> beforeMorning(BuildContext context, TodayViewModel viewModel) {
-  final lastNight = viewModel.lastNightFeeling;
+  final lastNight = viewModel.lastNight;
+  final note = viewModel.noteFromCocoa;
   return [
     _dateLine(context, viewModel.now),
-    _title(context, 'Good morning'),
+    _title(context, viewModel.greeting),
     _gap,
-    const CharacterSays(
+    CharacterSays(
       character: Character.toast,
-      words: "Ready when you are. Today's going to go well.",
+      words: [
+        if (note != null) 'Cocoa left a note: “$note”',
+        viewModel.toastWords,
+      ].join('\n\n'),
     ),
     _gap,
     FilledButton(
@@ -48,15 +54,22 @@ List<Widget> beforeMorning(BuildContext context, TodayViewModel viewModel) {
 
 /// Screen E.
 List<Widget> duringDay(BuildContext context, TodayViewModel viewModel) {
-  final today = viewModel.today;
-  final line = today?.line;
-  final goal = today?.goal;
-  final feeling = today?.morningFeeling;
+  final morning = viewModel.today?.morning;
+  final line = viewModel.line;
+  final goal = morning?.goal;
+  final feeling = morning?.checkIn.feeling?.label;
   return [
     _dateLine(context, viewModel.now),
     _title(context, 'Today'),
     _gap,
-    if (line != null) ...[LineCard(line: line), _gap],
+    if (line != null) ...[
+      LineCard(
+        line: line,
+        onToggleSave: viewModel.toggleSave,
+        onShare: viewModel.share,
+      ),
+      _gap,
+    ],
     InfoCard(
       title: 'Toast is carrying',
       body: [
@@ -83,7 +96,7 @@ List<Widget> duringDay(BuildContext context, TodayViewModel viewModel) {
 List<Widget> eveningState(BuildContext context, TodayViewModel viewModel) => [
   _dateLine(context, viewModel.now),
   _gap,
-  const CharacterSays(character: Character.cocoa, words: 'How are you now?'),
+  const CharacterSays(character: Character.cocoa, words: cocoaEveningToday),
   _gap,
   FilledButton(
     onPressed: () => context.push(Routes.evening),
@@ -92,21 +105,26 @@ List<Widget> eveningState(BuildContext context, TodayViewModel viewModel) => [
 ];
 
 List<Widget> nightState(BuildContext context, TodayViewModel viewModel) {
-  final today = viewModel.today;
+  final morning = viewModel.today?.morning;
+  final evening = viewModel.today?.evening;
+  final goal = morning?.goal;
+  final outcome = evening?.outcome;
+  final goodThing = evening?.goodThing;
+  final note = viewModel.noteForToast;
+  String told(Feeling? feeling) => feeling?.label ?? 'no check-in';
   return [
     _dateLine(context, viewModel.now),
     _gap,
-    const CharacterSays(
-      character: Character.cocoa,
-      words: 'Everything is exactly where it needs to be. Goodnight.',
-    ),
+    CharacterSays(character: Character.cocoa, words: viewModel.goodnight),
     _gap,
     InfoCard(
       title: 'Today',
       body: [
-        'This morning: ${today?.morningFeeling ?? 'no check-in'}',
-        'This evening: ${today?.eveningFeeling ?? 'no check-in'}',
-        if (today?.goal != null) 'Carried: ${today!.goal}',
+        '${told(morning?.checkIn.feeling)} → ${told(evening?.checkIn.feeling)}',
+        if (goal != null)
+          'Goal: $goal${outcome == null ? '' : ' · ${outcome.label}'}',
+        if (goodThing != null) 'Good thing: $goodThing',
+        if (note != null) 'Note for Toast: $note',
       ].join('\n'),
     ),
   ];

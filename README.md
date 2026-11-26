@@ -10,8 +10,8 @@ The product is described in [docs/SPEC.md](docs/SPEC.md).
 
 ## Status
 
-Milestone 1 of 4: project setup, navigation, Today's four states and a debug
-clock. Days are not yet stored.
+Milestone 2 of 4: first run, the morning and evening moments, storage on the
+phone and the notes between Toast and Cocoa.
 
 ## Build
 
@@ -20,6 +20,7 @@ later.
 
 ```bash
 flutter pub get
+dart run build_runner build   # only after changing the database tables
 flutter analyze
 flutter test
 flutter build apk --debug

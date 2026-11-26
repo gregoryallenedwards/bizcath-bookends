@@ -55,13 +55,28 @@ class DebugScreen extends StatelessWidget {
             const Text('Jump to (replaces today with sample data)'),
             for (final jump in _jumps.entries)
               OutlinedButton(
-                onPressed: () {
-                  viewModel.jumpTo(jump.key);
-                  context.go(Routes.today);
+                onPressed: () async {
+                  await viewModel.jumpTo(jump.key);
+                  if (context.mounted) context.go(Routes.today);
                 },
                 child: Text(jump.value),
               ),
             const SizedBox(height: 16),
+            const Text('Move the clock only'),
+            OutlinedButton(
+              onPressed: () {
+                viewModel.moveToThisEvening();
+                context.go(Routes.today);
+              },
+              child: const Text('To this evening'),
+            ),
+            OutlinedButton(
+              onPressed: () {
+                viewModel.moveToNextMorning();
+                context.go(Routes.today);
+              },
+              child: const Text('To next morning'),
+            ),
             OutlinedButton(
               onPressed: () => _pickMoment(context),
               child: const Text('Pick a date and time'),
@@ -69,6 +84,22 @@ class DebugScreen extends StatelessWidget {
             OutlinedButton(
               onPressed: viewModel.isOverridden ? viewModel.useRealClock : null,
               child: const Text('Use the real clock'),
+            ),
+            const SizedBox(height: 16),
+            const Text('Data'),
+            OutlinedButton(
+              onPressed: () async {
+                await viewModel.clearAll();
+                if (context.mounted) context.go(Routes.today);
+              },
+              child: const Text('Clear all data'),
+            ),
+            OutlinedButton(
+              onPressed: () async {
+                await viewModel.resetFirstRun();
+                if (context.mounted) context.go(Routes.today);
+              },
+              child: const Text('Reset first run'),
             ),
           ],
         ),

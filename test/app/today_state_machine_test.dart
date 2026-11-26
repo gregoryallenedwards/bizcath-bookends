@@ -7,8 +7,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   final date = DateTime(2026, 11, 26);
-  final morning = DayRecord(date: date, morningDone: true);
-  final closed = DayRecord(date: date, eveningDone: true);
+  final morning = DayRecord(
+    date: date,
+    morning: Morning(completedAt: date),
+  );
+  final closed = DayRecord(
+    date: date,
+    evening: Evening(completedAt: date),
+  );
 
   TodayState at(int hour, int minute, [DayRecord? today]) => todayStateFor(
     now: DateTime(2026, 11, 26, hour, minute),

@@ -1,5 +1,6 @@
 // Copyright the BizCath contributors.
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/routes.dart';
@@ -36,22 +37,28 @@ class _TodayScreenState extends State<TodayScreen> {
     final viewModel = widget.viewModel;
     return ListenableBuilder(
       listenable: viewModel,
-      builder: (context, _) => Scaffold(
-        body: SafeArea(
-          child: ListView(
-            // Room at the bottom so the Steady button never covers content.
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 96),
-            children: switch (viewModel.state) {
-              TodayState.beforeMorning => beforeMorning(context, viewModel),
-              TodayState.duringDay => duringDay(context, viewModel),
-              TodayState.evening => eveningState(context, viewModel),
-              TodayState.night => nightState(context, viewModel),
-            },
+      builder: (context, _) => AnnotatedRegion<SystemUiOverlayStyle>(
+        // With no app bar, the status bar icons have to be set here.
+        value: viewModel.isDark
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark,
+        child: Scaffold(
+          body: SafeArea(
+            child: ListView(
+              // Room at the bottom so the Steady button never covers content.
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 96),
+              children: switch (viewModel.state) {
+                TodayState.beforeMorning => beforeMorning(context, viewModel),
+                TodayState.duringDay => duringDay(context, viewModel),
+                TodayState.evening => eveningState(context, viewModel),
+                TodayState.night => nightState(context, viewModel),
+              },
+            ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => context.push(Routes.steady),
-          label: const Text('Steady'),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () => context.push(Routes.steady),
+            label: const Text('Steady'),
+          ),
         ),
       ),
     );
